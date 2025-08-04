@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Vehicle</title>
+</head>
+<body>
+    <h2>Add a New Vehicle</h2>
+    <form action="addVehicle" method="post">
+        <label>Vehicle Number:</label><br>
+        <input type="text" name="vehicleNumber" required><br><br>
+
+        <label>Vehicle Type:</label><br>
+        <select name="vehicleType" required>
+            <option value="Diesel Bus">Diesel Bus</option>
+            <option value="Electric Light Rail">Electric Light Rail</option>
+            <option value="Diesel-Electric Train">Diesel-Electric Train</option>
+        </select><br><br>
+
+        <label>Fuel Type:</label><br>
+        <input type="text" name="fuelType" required><br><br>
+
+        <label>Consumption Rate:</label><br>
+        <input type="number" name="consumptionRate" step="0.01" required><br><br>
+
+        <label>Max Passengers:</label><br>
+        <input type="number" name="maxPassengers" required><br><br>
+
+        <label>Route ID:</label><br>
+        <input type="number" name="routeId" required><br><br>
+
+        <input type="submit" value="Add Vehicle">
+    </form>
+</body>
+</html>
