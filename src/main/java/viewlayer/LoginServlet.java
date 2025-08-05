@@ -1,13 +1,13 @@
 package viewlayer;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import viewlayer.PageCreation;
 /**
  * LoginServlet (View Layer)
  * Handles the initial login page and authentication.
@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
         out.println("<body>");
         out.println("    <div class=\"login-container\">");
         out.println("        <h2>CST8288 Books DBMS</h2>");
-        out.println("        <form action=\"login\" method=\"post\">");
+        out.println("        <form action=\"LoginServlet-URL\" method=\"post\">");
         out.println("            <div class=\"form-group\">");
         out.println("                <label for=\"username\">Username:</label>");
         out.println("                <input type=\"text\" id=\"username\" name=\"username\" value=\"cst8288\" required>");
@@ -79,12 +79,15 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+        response.setContentType("text/html;charset=UTF-8");
+//        try (PrintWriter out = response.getWriter()) {
+        PrintWriter out = response.getWriter();
+        
         if (VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password)) {
             // Authentication successful
             HttpSession session = request.getSession();
             session.setAttribute("authenticated", true); // Mark session as authenticated
-            response.sendRedirect("frontController"); // Redirect to FrontController
+            PageCreation.loginPage(request, out);
         } else {
             // Authentication failed
             request.setAttribute("errorMessage", "Invalid username or password. Please try again.");

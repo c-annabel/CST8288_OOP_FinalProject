@@ -47,3 +47,20 @@ CREATE TABLE Vehicles (
     route_id INT,  -- FK to assigned route
     FOREIGN KEY (route_id) REFERENCES Routes(route_id)
 );
+
+CREATE TABLE Maintenance_Report(
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(50) UNIQUE NOT NULL,
+    report_status VARCHAR(50),
+    report_description VARCHAR(100),
+    FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
+);
+
+CREATE TABLE GPS_Tracking(
+    gps_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(50) UNIQUE NOT NULL,
+    timestamp VARCHAR(50),
+    latitude VARCHAR(50),
+    longitude VARCHAR(50),
+    FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
+);
