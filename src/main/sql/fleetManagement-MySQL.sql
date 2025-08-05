@@ -64,3 +64,34 @@ CREATE TABLE GPS_Tracking(
     longitude VARCHAR(50),
     FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
 );
+
+
+
+
+-- Fuel Consumption Log Table (FR-04)
+CREATE TABLE FuelConsumptionLog (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(50) NOT NULL,
+    fuel_consumed DECIMAL(10,2),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
+);
+
+-- Energy Consumption Log Table (FR-04)
+CREATE TABLE EnergyConsumptionLog (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(50) NOT NULL,
+    energy_consumed DECIMAL(10,2),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
+);
+
+-- Maintenance Report Table (FR-06)
+CREATE TABLE MaintenanceReportLog (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(50) NOT NULL,
+    report_status VARCHAR(50),
+    report_description VARCHAR(255),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
+);
