@@ -39,6 +39,26 @@
         <url-pattern>/VehicleManagementServlet</url-pattern>
     </servlet-mapping>
     
+    <!-->Start Ovi-->
+    <servlet>
+        <servlet-name>FuelMonitorServlet</servlet-name>
+        <servlet-class>viewlayer.FuelMonitorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FuelMonitorServlet</servlet-name>
+        <url-pattern>/fuelmonitor</url-pattern> <!-- URL to view fuel consumption report -->
+    </servlet-mapping>
+
+    <!-- ReportServlet for various reports and analytics (FR-06) -->
+    <servlet>
+        <servlet-name>ReportServlet</servlet-name>
+        <servlet-class>viewlayer.ReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportServlet</servlet-name>
+        <url-pattern>/reports</url-pattern> <!-- URL for various reports and analytics -->
+    </servlet-mapping>
+    <!-->End Ovi-->
     <session-config>
         <session-timeout>
             30

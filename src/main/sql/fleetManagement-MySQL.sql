@@ -10,8 +10,20 @@ CREATE TABLE Users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    user_type ENUM('Manager', 'Operator') NOT NULL
+    user_type ENUM('Manager', 'Operator') NOT NULL,
+    FOREIGN KEY (User_Log_ID) REFERENCES UsersLog(User_Log_ID),
 );
+
+CREATE TABLE UsersLog(
+    User_Log_ID INT AUTO_INCREMENT PRIMARY KEY,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (log_Id) REFERENCES log(log_Id)
+);
+
+CREATE TABLE log(
+    log_Id INT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(100)
+)
 
 -- Routes table
 CREATE TABLE Routes (
@@ -46,7 +58,19 @@ CREATE TABLE Vehicles (
     consumption_rate DECIMAL(10,2),
     max_passengers INT,
     route_id INT,  -- FK to assigned route
+    maintenance_threshold DECIMAL(10, 2) DEFAULT 100.00,
+    fuel_alert_threshold DECIMAL(10, 2) DEFAULT 50.00,  -- Fuel alert threshold for FR-04
     FOREIGN KEY (route_id) REFERENCES Routes(route_id)
+);
+
+-- Fuel Consumption Logs table (for FR-04)
+CREATE TABLE FuelConsumptionLogs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_id INT NOT NULL,
+    consumption_date DATE NOT NULL,
+    fuel_consumed DECIMAL(10, 2) NOT NULL,  -- Fuel consumed in liters or kWh
+    distance_covered DECIMAL(10, 2),  -- Distance covered (optional, in kilometers)
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(vehicle_id)
 );
 
 CREATE TABLE Maintenance_Report(
@@ -65,3 +89,12 @@ CREATE TABLE GPS_Tracking(
     longitude VARCHAR(50),
     FOREIGN KEY (vehicle_number) REFERENCES Vehicles(vehicle_number)
 );
+
+
+-- View for fuel consumption report (for FR-06)
+CREATE VIEW FuelConsumptionReport AS
+SELECT v.vehicle_number, v.vehicle_type, SUM(fcl.fuel_consumed) AS total_fuel_consumed, 
+       AVG(fcl.distance_covered) AS average_distance_covered
+FROM Vehicles v
+JOIN FuelConsumptionLogs fcl ON v.vehicle_id = fcl.vehicle_id
+GROUP BY v.vehicle_id;

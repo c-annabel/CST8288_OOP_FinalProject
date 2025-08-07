@@ -9,9 +9,11 @@ import transferobjects.User;
 /**
  * 
  * @author Tirth Rao
+ * @since modify By Chen Wang
  */
 public interface UserDAO {
     boolean registerUser(User user);
     User loginUser(String email, String password);
     boolean isEmailRegistered(String email);
+    void takeABreak(String breakLog);
 }

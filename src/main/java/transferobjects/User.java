@@ -7,6 +7,7 @@ package transferobjects;
 /**
  * 
  * @author Tirth Rao
+ * @since modify by Chen Wang
  */
 public class User {
     private int userId;
@@ -14,6 +15,7 @@ public class User {
     private String email;
     private String password;
     private String userType; // "Manager" or "Operator"
+    private String breakLog;
 
     // Constructor is private to force the use of the Builder
     private User(UserBuilder builder) {
@@ -44,7 +46,11 @@ public class User {
     public String getUserType() {
         return userType;
     }
-
+    
+    public String getBreakLog() {
+        return breakLog;
+    }
+    
     public static class UserBuilder {
         private int userId;
         private String name;

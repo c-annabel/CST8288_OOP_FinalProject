@@ -95,7 +95,11 @@ public class UserDAOImpl implements UserDAO {
             return false;
         }
     }
-
+    
+    public void take(String breakLog){
+        
+    }
+    
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = md.digest(password.getBytes());

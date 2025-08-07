@@ -77,6 +77,7 @@ public class PageCreation {
             out.println("<li><a href='GPSOverviewServlet'>View GPS Tracker</a></li>");
             out.println("</ul>");
         }
+        
         out.println("<a href='LogoutServlet'>Logout</a>");
         out.println("</body></html>");
     }
