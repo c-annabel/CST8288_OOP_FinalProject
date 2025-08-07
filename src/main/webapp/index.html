@@ -1,13 +1,52 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-        <FORM ACTION="LoginServlet-URL" METHOD="GET">
-            <INPUT TYPE="SUBMIT" NAME="login" value="Login">
-        </form>
-    </body>
+<head>
+    <title>Start Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            background-color: #f4f7f9;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+        }
+
+        form {
+            display: inline-block;
+            background-color: #ffffff;
+            padding: 30px 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        input[type="submit"] {
+            font-size: 1em;
+            padding: 10px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Public Transit Fleet Management</h1>
+    <form action="ViewServlet" method="GET">
+        <input type="submit" name="login" value="Login">
+        <input type="submit" name="Register" value="Register">
+    </form>
+</body>
 </html>

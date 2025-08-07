@@ -30,7 +30,7 @@ import transferobjects.CredentialsDTO;
 public class DataSource {
 
     private Connection connection = null;
-    private String url = "jdbc:mysql://localhost:3306/books?useSSL=false&allowPublicKeyRetrieval=true";
+    private String url = "jdbc:mysql://localhost:3306/fleetmanagement?useSSL=false&allowPublicKeyRetrieval=true";
     private String username;
     private String password;
 

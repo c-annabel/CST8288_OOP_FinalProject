@@ -23,7 +23,8 @@ CREATE TABLE Routes (
 CREATE TABLE Stations (
     station_id INT AUTO_INCREMENT PRIMARY KEY,
     station_name VARCHAR(100) NOT NULL,
-    location VARCHAR(150)
+    latitude VARCHAR(50),
+    longitude VARCHAR(50)
 );
 
 -- Mapping table between routes and their stations

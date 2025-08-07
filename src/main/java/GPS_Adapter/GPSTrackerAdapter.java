@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GPS_Adapter;
-
 /**
  *
  * @author HelloFriend
@@ -17,6 +16,7 @@ public class GPSTrackerAdapter implements GPSTracker {
 
     @Override
     public double getLatitude() {
+        
         return vendorGPS.fetchCoordinates()[0];
     }
 
