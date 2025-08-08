@@ -4,6 +4,7 @@
  */
 package dataaccesslayer.DAOinterface;
 
+import java.util.List;
 import transferobjects.User;
 
 /**
@@ -15,5 +16,7 @@ public interface UserDAO {
     boolean registerUser(User user);
     User loginUser(String email, String password);
     boolean isEmailRegistered(String email);
-    void takeABreak(String breakLog);
+    void takeABreak(String breakLog, String name);
+    List<String> getBreakLog(String name);
+    public List<User> getAllUsers();
 }

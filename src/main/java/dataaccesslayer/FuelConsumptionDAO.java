@@ -4,7 +4,7 @@
  */
 package dataaccesslayer;
 
-import transferobjects.FuelConsumption;
+import transferobjects.FuelConsumptionDTO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,8 @@ public class FuelConsumptionDAO {
         this.cred = cred;
     }
     
-    public List<FuelConsumption> getFuelConsumptionReport() {
-        List<FuelConsumption> fuelData = new ArrayList<>();
+    public List<FuelConsumptionDTO> getFuelConsumptionReport() {
+        List<FuelConsumptionDTO> fuelData = new ArrayList<>();
         DataSource source = new DataSource(cred);
         String query = "SELECT v.vehicle_number, v.vehicle_type, SUM(fcl.fuel_consumed) AS total_fuel_consumed, "
                      + "AVG(fcl.distance_covered) AS average_distance_covered "
@@ -35,7 +35,7 @@ public class FuelConsumptionDAO {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                FuelConsumption fuel = new FuelConsumption(
+                FuelConsumptionDTO fuel = new FuelConsumptionDTO(
                         rs.getString("vehicle_number"),
                         rs.getString("vehicle_type"),
                         rs.getDouble("total_fuel_consumed"),

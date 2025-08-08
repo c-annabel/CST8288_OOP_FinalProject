@@ -6,7 +6,7 @@ package transferobjects;
 
 /**
  *
- * @author HelloFriend
+ * @author Chen Wang
  */
 public class Maintence_ReportDTO {
     private int id;

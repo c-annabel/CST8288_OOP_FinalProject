@@ -9,49 +9,24 @@ package transferobjects;
  * @author HelloFriend
  */
 public class GPSDTO {
-    private int id;
+    private int GPS_id;
     private String vehicle_number;
     private String timestamp;
     private String latitude;
     private String longitude;
-    
-    public void setID(int id){
-        this.id = id;
-    }
-    
-    public void setVehicle_number(String number){
-        this.vehicle_number = number;
-    }
-    
-    public void setTimeStamp(String time){
-        this.timestamp = time;
-    }
-    
-    public void setLatitude(String latitude){
-        this.latitude = latitude;
-    }
-    
-    public void setLongitude(String longitude){
-        this.longitude = longitude;
-    }
-    
-    public int getID(){
-        return this.id;
-    }
-    
-    public String getNumber(){
-        return this.vehicle_number;
-    }
-    
-    public String getTimeStamp(){
-        return this.timestamp;
-    }
-    
-    public String getLatitude(){
-        return this.latitude;
-    }
-    
-    public String getLongitude(){
-        return this.longitude;
-    }
+    private String type; // "vehicle" or "station"
+
+    // Getters and setters
+    public int getGPS_id(){return GPS_id;}
+    public void setGps_id(int GPS_id){this.GPS_id = GPS_id;}
+    public String getVehicle_number() { return vehicle_number; }
+    public void setIdentifier(String vehicle_number) { this.vehicle_number = vehicle_number; }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+    public String getLatitude() { return latitude; }
+    public void setLatitude(String latitude) { this.latitude = latitude; }
+    public String getLongitude() { return longitude; }
+    public void setLongitude(String longitude) { this.longitude = longitude; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 }

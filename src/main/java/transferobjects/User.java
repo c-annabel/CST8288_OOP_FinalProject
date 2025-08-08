@@ -57,7 +57,8 @@ public class User {
         private String email;
         private String password;
         private String userType;
-
+        private String breakLog;
+        
         public UserBuilder setUserId(int userId) {
             this.userId = userId;
             return this;
@@ -82,7 +83,12 @@ public class User {
             this.userType = userType;
             return this;
         }
-
+        
+        public UserBuilder setBreakLog(String breakLog) {
+            this.breakLog = breakLog;
+            return this;
+        }
+        
         public User build() {
             return new User(this);
         }

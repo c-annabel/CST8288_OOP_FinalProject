@@ -49,11 +49,11 @@ public class DataSource {
  * Only use one connection for this application, prevent memory leaks.
      */
     public Connection createConnection() throws SQLException {
-    try {
-        return DriverManager.getConnection(url, username, password);
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        throw ex;
+        try {
+            return DriverManager.getConnection(url, username, password);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
     }
-}
 }

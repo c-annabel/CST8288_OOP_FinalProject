@@ -4,6 +4,7 @@
  */
 package viewlayer;
 
+import businesslayer.System_Control;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -58,29 +59,57 @@ public class PageCreation {
         out.println("</html>");
     }
     
-    public static void SystemHomePage(HttpServletRequest request, PrintWriter out){
+    public static void SystemHomePage(HttpServletRequest request, PrintWriter out, System_Control logic){
         HttpSession session = request.getSession(false);
         String name = (String) session.getAttribute("name");
         String role = (String) session.getAttribute("role");
+
         out.println("<!DOCTYPE html>");
         out.println("<html><head><title>Manager Dashboard</title></head><body>");
         out.println("<h1>Welcome, " + name + " ("+ role +")</h1>");
+
+        // Display break confirmation message if exists
+        String breakMessage = (String) session.getAttribute("breakMessage");
+        if (breakMessage != null) {
+            out.println("<p style='color:green'>" + breakMessage + "</p>");
+            session.removeAttribute("breakMessage"); // Clear after display
+        }
+
         if(role.equals("Manager")){
             out.println("<ul>");
             out.println("<li><a href='VehicleManagementServlet'>Manage Vehicles</a></li>");
-            out.println("<li><a href='MaintenanceServlet'>Manage Maintenance Reports</a></li>");
+            out.println("<li><a href='ReportServlet'>Manage Reports</a></li>");
             out.println("<li><a href='GPSOverviewServlet'>View GPS Tracker</a></li>");
+            out.println("<li><a href='RouteStationManagementServlet'>Route and Station Management</a></li>");
             out.println("</ul>");
         }else{
             out.println("<ul>");
-            out.println("<li><a href='MaintenanceServlet'>Manage Maintenance Reports</a></li>");
+            out.println("<li><a href='ReportServlet'>Manage Reports</a></li>");
             out.println("<li><a href='GPSOverviewServlet'>View GPS Tracker</a></li>");
             out.println("</ul>");
         }
-        
-        out.println("<a href='LogoutServlet'>Logout</a>");
+
+        out.println("<form action='HomeServlet' method='post'>");
+        out.println("<label for='breakTime'>Break Time (minutes): </label>");
+        out.println("<input type='number' id='breakTime' name='breakTime' min='1' placeholder='Enter minutes'>");
+        out.println("<br><br>");
+
+        out.println("<button type='submit' name='action' value='logout'>Logout</button>");
+        out.println("<button type='submit' name='action' value='break'>Take a Break</button>");
+        out.println("</form>");
+
+        // Display break logs
+        out.println("<h2>Your Break Logs</h2>");
+        out.println("<ul>");
+        List<String> breakLogs = logic.getUserBreakLog(name);
+        for (String log : breakLogs) {
+            out.println("<li>" + log + "</li>");
+        }
+        out.println("</ul>");
+
         out.println("</body></html>");
     }
+    
     public static void VehicleManageHome(HttpServletRequest request, PrintWriter out){
         
         out.println("<html><head><title>Vehicle Management</title></head><body>");
@@ -95,11 +124,30 @@ public class PageCreation {
         out.println("<a href='HomeServlet'>Back to System Home</a>");
         out.println("</body></html>");
     }
-    public static void ShowAllVehicle(List<Vehicle> vehicles, PrintWriter out){
-        out.println("<html><head><title>Vehicle Management</title></head><body>");
+    public static void ShowAllVehicle(List<Vehicle> vehicles, PrintWriter out) {
+        out.println("<html><head><title>Vehicle Management</title>");
+        out.println("<style>");
+        out.println("table {border-collapse: collapse; width: 100%;}");
+        out.println("th, td {border: 1px solid #ddd; padding: 8px; text-align: left;}");
+        out.println("th {background-color: #f2f2f2;}");
+        out.println("tr:nth-child(even) {background-color: #f9f9f9;}");
+        out.println("</style>");
+        out.println("</head><body>");
         out.println("<h1>Vehicle Management</h1>");
-        out.println("<table border='1'>");
-        out.println("<tr><th>ID</th><th>Number</th><th>Type</th><th>Fuel</th><th>Rate</th><th>Capacity</th><th>Route ID</th><th>Action</th></tr>");
+        out.println("<table>");
+        out.println("<tr>");
+        out.println("<th>ID</th>");
+        out.println("<th>Number</th>");
+        out.println("<th>Type</th>");
+        out.println("<th>Fuel</th>");
+        out.println("<th>Consumption Rate</th>");
+        out.println("<th>Capacity</th>");
+        out.println("<th>Route ID</th>");
+        out.println("<th>Hours Used</th>");
+        out.println("<th>Maint Threshold</th>");
+        out.println("<th>Fuel Alert</th>");
+        out.println("<th>Diagnostics</th>");
+        out.println("</tr>");
 
         for (Vehicle v : vehicles) {
             out.println("<tr>");
@@ -110,10 +158,25 @@ public class PageCreation {
             out.println("<td>" + v.getConsumptionRate() + "</td>");
             out.println("<td>" + v.getMaxPassengers() + "</td>");
             out.println("<td>" + v.getRouteId() + "</td>");
+            out.println("<td>" + v.getHoursOfcomponents() + "</td>");
+            out.println("<td>" + v.getMaintenance_threshold() + "</td>");
+            out.println("<td>" + v.getFuel_alert_threshold() + "</td>");
+
+            // Add diagnostic status with color coding
+            String diagnostics = v.getDiagnostics();
+            String color = "black";
+            if ("Need service".equalsIgnoreCase(diagnostics)) {
+                color = "red";
+            } else if ("No Need service".equalsIgnoreCase(diagnostics)) {
+                color = "green";
+            }
+            out.println("<td style='color:" + color + ";'>" + diagnostics + "</td>");
+
             out.println("</tr>");
         }
 
         out.println("</table>");
+        out.println("<a href='VehicleManagementServlet'>Back to System Home</a>");
         out.println("</body></html>");
     }
     
@@ -122,36 +185,83 @@ public class PageCreation {
         out.println("<html lang=\"en\"><head><title>Vehicle Management</title></head><body>");
         out.println("<h1>Vehicle Management</h1>");
         out.println("<form action='VehicleManagementServlet' method='post'>");
-        out.println("Vehicle Number: <input type='text' name='vehicleNumber'><br>");
         out.println("Vehicle Type: <select name='vehicleType'>");
         out.println("<option value='Diesel Bus'>Diesel Bus</option>");
         out.println("<option value='Electric Light Rail'>Electric Light Rail</option>");
         out.println("<option value='Diesel-Electric Train'>Diesel-Electric Train</option>");
         out.println("</select><br>");
         out.println("Fuel Type: <input type='text' name='fuelType'><br>");
-        out.println("Consumption Rate: <input type='text' name='consumptionRate'><br>");
+        out.println("Consumption Rate: <input type='number' name='consumptionRate' step='any'><br>");
         out.println("Max Passengers: <input type='number' name='maxPassengers'><br>");
-        out.println("Route ID: <input type='number' name='routeId'><br>");
-        out.println("<input type='submit' name=\"AddVehicle\" value='AddVehicle'>");
+        out.println("<input type='submit' name=\"action\" value='AddVehicle'>");
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            out.println("<p class=\"error-message\">" + errorMessage + "</p>");
+        }
         out.println("</form>");
+        out.println("<a href='VehicleManagementServlet'>Back to System Home</a>");
         out.println("</body></html>");
     }
     
-    public static void EditVehicle(List<Vehicle> vehicles, PrintWriter out){
-        out.println("<html><head><title>Edit/Delete Vehicle</title></head><body>");
+    public static void EditVehicle(List<Vehicle> vehicles, HttpServletRequest request, PrintWriter out) {
+        out.println("<html><head><title>Edit/Delete Vehicle</title>");
+        out.println("<style>");
+        out.println("form {border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 5px;}");
+        out.println("input[type='text'], input[type='number'] {width: 100%; padding: 8px; margin: 5px 0;}");
+        out.println(".error-message {color: red; font-weight: bold;}");
+        out.println("</style>");
+        out.println("</head><body>");
         out.println("<h2>Edit or Delete Vehicle</h2>");
+
         for (Vehicle v : vehicles) {
-            out.println("<form action='EditVehicleServlet' method='post'>");
+            out.println("<form action='VehicleManagementServlet' method='post'>");
             out.println("<input type='hidden' name='vehicleId' value='" + v.getVehicleId() + "'>");
-            out.println("Vehicle Number: <input type='text' name='vehicleNumber' value='" + v.getVehicleNumber() + "'><br>");
-            out.println("Fuel Type: <input type='text' name='fuelType' value='" + v.getFuelType() + "'><br>");
-            out.println("Consumption Rate: <input type='text' name='consumptionRate' value='" + v.getFuelType() + "'><br>");
-            out.println("Max Passengers: <input type='number' name='maxPassengers' value='" + v.getMaxPassengers() + "'><br>");
-            out.println("Route ID: <input type='number' name='routeId' value='" + v.getRouteId() + "'><br>");
-            out.println("<input type='submit' name='action' value='Update'>");
-            out.println("<input type='submit' name='action' value='Delete'>");
+
+            out.println("<label>Vehicle Number:</label>");
+            out.println("<input type='text' name='vehicleNumber' value='" + v.getVehicleNumber() + "' readonly><br>");
+
+            out.println("<label>Vehicle Type:</label>");
+            out.println("<input type='text' name='VehicleType' value='" + v.getVehicleType() + "' readonly><br>");
+
+            out.println("<label>Fuel Type:</label>");
+            out.println("<input type='text' name='fuelType' value='" + v.getFuelType() + "'><br>");
+
+            out.println("<label>Consumption Rate:</label>");
+            out.println("<input type='number' step='any' name='consumptionRate' value='" + v.getConsumptionRate() + "'><br>");
+
+            out.println("<label>Max Passengers:</label>");
+            out.println("<input type='number' name='maxPassengers' value='" + v.getMaxPassengers() + "'><br>");
+
+            out.println("<label>Route ID:</label>");
+            out.println("<input type='number' name='routeId' value='" + v.getRouteId() + "'><br>");
+
+            out.println("<label>Hours Used:</label>");
+            out.println("<input type='number' name='hoursUsed' value='" + v.getHoursOfcomponents() + "'><br>");
+
+            out.println("<label>Maintenance Threshold:</label>");
+            out.println("<input type='number' name='maintenanceThreshold' value='" + v.getMaintenance_threshold() + "'><br>");
+
+            out.println("<label>Fuel Alert Threshold:</label>");
+            out.println("<input type='number' name='fuelAlertThreshold' value='" + v.getFuel_alert_threshold() + "'><br>");
+
+            out.println("<label>Diagnostics:</label>");
+            out.println("<select name='diagnostics'>");
+            out.println("<option value='Need service'" + ("Need service".equals(v.getDiagnostics()) ? " selected" : "") + ">Need service</option>");
+            out.println("<option value='No Need service'" + ("No Need service".equals(v.getDiagnostics()) ? " selected" : "") + ">No Need service</option>");
+            out.println("</select><br>");
+
+            out.println("<input type='submit' name='action' value='Update' style='margin-right:10px;'>");
+            out.println("<input type='submit' name='action' value='Delete' style='background-color:#ff6666;'>");
+
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+                out.println("<p class='error-message'>" + errorMessage + "</p>");
+            }
             out.println("</form><hr>");
         }
+        out.println("<a href='VehicleManagementServlet'>Back to System Home</a>");
         out.println("</body></html>");
-    }
+    }  
 }
+
+

@@ -13,8 +13,9 @@ import transferobjects.GPSDTO;
  */
 public interface GPSDAO {
         List<GPSDTO> getAllGPS()  throws SQLException;
-	GPSDTO getGPSbyvehicle_number(Integer vehicle_number);
+	GPSDTO getGPSbyvehicle_number(String vehicleNumber);
 	void addGPS(GPSDTO GPS);
 	void updateGPS(GPSDTO GPS);
-	void deleteGPS(GPSDTO GPS);
+	void deleteGPSById(int gpsId);
+        void deleteGPSByVehicle(String vehicleNumber);
 }

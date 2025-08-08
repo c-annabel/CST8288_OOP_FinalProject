@@ -8,14 +8,14 @@ package transferobjects;
  * 
  * @author chinmoy
  */
-public class FuelConsumption {
+public class FuelConsumptionDTO {
     private String vehicleNumber;
     private String vehicleType;
     private double totalFuelConsumed;
     private double averageDistanceCovered;
 
     // Constructor
-    public FuelConsumption(String vehicleNumber, String vehicleType, double totalFuelConsumed, double averageDistanceCovered) {
+    public FuelConsumptionDTO(String vehicleNumber, String vehicleType, double totalFuelConsumed, double averageDistanceCovered) {
         this.vehicleNumber = vehicleNumber;
         this.vehicleType = vehicleType;
         this.totalFuelConsumed = totalFuelConsumed;

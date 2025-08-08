@@ -2,7 +2,7 @@ package viewlayer;
 
 import businesslayer.System_Control;
 import dataaccesslayer.FuelConsumptionDAO;
-import transferobjects.FuelConsumption;
+import transferobjects.FuelConsumptionDTO;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -30,10 +30,10 @@ public class FuelMonitorServlet extends HttpServlet {
         FuelConsumptionDAO fuelDAO = new FuelConsumptionDAO(cred);
         
         // Fetch fuel consumption data
-        List<FuelConsumption> fuelData = fuelDAO.getFuelConsumptionReport();
+        List<FuelConsumptionDTO> fuelData = fuelDAO.getFuelConsumptionReport();
 
         out.println("<h3>Fuel/Energy Consumption Reports</h3>");
-        for (FuelConsumption data : fuelData) {
+        for (FuelConsumptionDTO data : fuelData) {
             out.println("<p>" + data.getVehicleNumber() + " (" + data.getVehicleType() + ") - "
                     + "Fuel Consumed: " + data.getTotalFuelConsumed() + " liters, "
                     + "Average Distance Covered: " + data.getAverageDistanceCovered() + " km</p>");

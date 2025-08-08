@@ -13,6 +13,8 @@ import transferobjects.User;
 import java.sql.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import transferobjects.CredentialsDTO;
 
 public class UserDAOImpl implements UserDAO {
@@ -96,10 +98,117 @@ public class UserDAOImpl implements UserDAO {
         }
     }
     
-    public void take(String breakLog){
-        
+    @Override
+    public void takeABreak(String breakLog, String name) {
+        final String insertLogSQL       = "INSERT INTO logs (description) VALUES (?)";
+        final String insertUsersLogSQL  = "INSERT INTO UsersLog (user_id, logs_ID) VALUES (?, ?)";
+        final String findUserIdSQL      = "SELECT user_id FROM Users WHERE name = ?";
+
+        DataSource source = new DataSource(cred);
+
+        try (Connection con = source.createConnection()) {
+            con.setAutoCommit(false);
+            try {
+                // 1) Find user_id by name
+                int userId;
+                try (PreparedStatement ps = con.prepareStatement(findUserIdSQL)) {
+                    ps.setString(1, name);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.next()) {
+                            throw new SQLException("User not found (name not unique or missing): " + name);
+                        }
+                        userId = rs.getInt("user_id");
+                    }
+                }
+
+                // 2) Insert log row
+                int logsId;
+                try (PreparedStatement ps = con.prepareStatement(insertLogSQL, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, breakLog);
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) {
+                            throw new SQLException("Failed to obtain generated key for logs");
+                        }
+                        // Column index 1 is safe for MySQL generated keys
+                        logsId = rs.getInt(1);
+                    }
+                }
+
+                // 3) Link user ↔ log
+                try (PreparedStatement ps = con.prepareStatement(insertUsersLogSQL)) {
+                    ps.setInt(1, userId);
+                    ps.setInt(2, logsId); // <-- UsersLog.logs_ID
+                    ps.executeUpdate();
+                }
+
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                throw ex;
+            } finally {
+                con.setAutoCommit(true); // optional, good hygiene if connection is pooled
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
+    @Override
+    public List<String> getBreakLog(String name) {
+        DataSource source = new DataSource(cred);
+        List<String> logs = new ArrayList<>();
+        String sql =
+            "SELECT l.description " +
+            "FROM logs l " +
+            "JOIN UsersLog ul ON l.logs_Id = ul.logs_Id " +
+            "JOIN Users u   ON ul.user_id = u.user_id " +
+            "WHERE u.name = ? " +
+            "  AND l.description LIKE 'BREAK:%' " +
+            "ORDER BY l.logs_Id DESC";
+
+        try (Connection con = source.createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    logs.add(rs.getString("description"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return logs;
+    }
+    
+    // Add to UserDAOImpl.java
+    @Override
+    public List<User> getAllUsers(){
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM Users";
+        DataSource source = new DataSource(cred);
+
+        try (Connection con = source.createConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                User user = new User.UserBuilder()
+                    .setUserId(rs.getInt("user_id"))
+                    .setName(rs.getString("name"))
+                    .setEmail(rs.getString("email"))
+                    .setPassword(rs.getString("password"))
+                    .setUserType(rs.getString("user_type"))
+                    .build();
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = md.digest(password.getBytes());
