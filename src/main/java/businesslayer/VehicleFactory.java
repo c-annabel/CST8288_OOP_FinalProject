@@ -3,17 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package businesslayer;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 import transferobjects.DieselBus;
 import transferobjects.DieselElectricTrain;
 import transferobjects.ElectricLightRail;
 
 /**
- *
- * @author HelloFriend
+ * according the Vehicle type, building different type Vehicle class
+ * including Diesel Bus, Electric Light Rail and Diesel-Electric Train
+ * implement by simple factor design pattern
+ * @author Chen wang
  */
 public class VehicleFactory {
-    public static Vehicle createVehicle(String type) {
+    public static VehicleDTO createVehicle(String type) {
         switch (type) {
             case "Diesel Bus":
                 return new DieselBus();

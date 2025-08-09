@@ -12,8 +12,8 @@ import transferobjects.StationDTO;
 import dataaccesslayer.DAOinterface.RouteDAO;
   
 /**
- *
- * @author HelloFriend
+ *  RouteDAO implementation
+ * @author Chen Wang
  */
 public class RouteDAOImpl implements RouteDAO  {
     private CredentialsDTO cred;

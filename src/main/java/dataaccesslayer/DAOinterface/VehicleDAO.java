@@ -10,12 +10,12 @@ package dataaccesslayer.DAOinterface;
  */
 import java.sql.SQLException;
 import java.util.List;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 
 public interface VehicleDAO {
-    void insertVehicle(Vehicle vehicle) throws SQLException;
-    List<Vehicle> getAllVehicles() throws SQLException;
-    Vehicle getVehicleByNumber(String vehicleNumber) throws SQLException;
-    void updateVehicle(Vehicle vehicle) throws SQLException;
+    void insertVehicle(VehicleDTO vehicle) throws SQLException;
+    List<VehicleDTO> getAllVehicles() throws SQLException;
+    VehicleDTO getVehicleByNumber(String vehicleNumber) throws SQLException;
+    void updateVehicle(VehicleDTO vehicle) throws SQLException;
     void deleteVehicle(String vehicleNumber) throws SQLException;
 }

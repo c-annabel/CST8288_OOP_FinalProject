@@ -11,7 +11,8 @@ import java.util.List;
 import transferobjects.CredentialsDTO;
 
 /**
- *
+ * for Fuel consumption Observer
+ * used to make Fuel consumption report
  * @author chinmoy
  */
 public class FuelConsumptionDAO {
@@ -21,6 +22,10 @@ public class FuelConsumptionDAO {
         this.cred = cred;
     }
     
+    /**
+     * by SQL query to gather the data system need to make a report
+     * @return 
+     */
     public List<FuelConsumptionDTO> getFuelConsumptionReport() {
         List<FuelConsumptionDTO> fuelData = new ArrayList<>();
         DataSource source = new DataSource(cred);

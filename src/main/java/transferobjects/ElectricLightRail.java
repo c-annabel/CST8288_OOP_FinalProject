@@ -8,7 +8,7 @@ package transferobjects;
  *
  * @author Chen Wang
  */
-public class ElectricLightRail extends Vehicle {
+public class ElectricLightRail extends VehicleDTO {
     private int hoursOfUseCatenary;
     private int hoursOfUsePantograph;
     private int hoursOfUseBreakers;

@@ -8,45 +8,45 @@
         <servlet-name>ViewServlet</servlet-name>
         <url-pattern>/ViewServlet</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>viewlayer.HomeServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/HomeServlet</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>viewlayer.LogoutServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>VehicleManagementServlet</servlet-name>
         <servlet-class>viewlayer.VehicleManagementServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>VehicleManagementServlet</servlet-name>
         <url-pattern>/VehicleManagementServlet</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>RouteStationManagementServlet</servlet-name>
         <servlet-class>viewlayer.RouteStationManagementServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>RouteStationManagementServlet</servlet-name>
         <url-pattern>/RouteStationManagementServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ReportServlet</servlet-name>
+        <servlet-class>viewlayer.ReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportServlet</servlet-name>
+        <url-pattern>/ReportServlet</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -57,15 +57,6 @@
         <servlet-name>GPSOverviewServlet</servlet-name>
         <url-pattern>/GPSOverviewServlet</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>ReportServlet</servlet-name>
-        <servlet-class>viewlayer.ReportServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ReportServlet</servlet-name>
-        <url-pattern>/ReportServlet</url-pattern>
-    </servlet-mapping>
     
     <!-->Start Ovi-->
     <servlet>
@@ -74,9 +65,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FuelMonitorServlet</servlet-name>
-        <url-pattern>/fuelmonitor</url-pattern> <!-- URL to view fuel consumption report -->
+        <url-pattern>/fuelmonitor</url-pattern>
+        <!-- URL to view fuel consumption report -->
     </servlet-mapping>
-
     <!-- ReportServlet for various reports and analytics (FR-06) -->
     <servlet>
         <servlet-name>ReportServlet</servlet-name>
@@ -84,7 +75,8 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ReportServlet</servlet-name>
-        <url-pattern>/reports</url-pattern> <!-- URL for various reports and analytics -->
+        <url-pattern>/reports</url-pattern>
+        <!-- URL for various reports and analytics -->
     </servlet-mapping>
     <!-->End Ovi-->
     <session-config>

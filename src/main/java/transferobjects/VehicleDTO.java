@@ -5,10 +5,10 @@
 package transferobjects;
 
 /**
- * abstract class for Vehicle simple factory
+ * abstract class for VehicleDTO simple factory
  * @author Chen Wang
  */
-public abstract class Vehicle {
+public abstract class VehicleDTO {
     private int vehicleId;
     private String vehicleNumber;
     private String vehicleType;

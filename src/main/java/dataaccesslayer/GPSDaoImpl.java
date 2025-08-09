@@ -11,8 +11,8 @@ import java.util.List;
 import transferobjects.CredentialsDTO;
 import transferobjects.GPSDTO;
 /**
- *
- * @author HelloFriend
+ * part of GPS adapter
+ * @author Chen Wang
  */
 public class GPSDaoImpl implements GPSDAO{
     private CredentialsDTO cred;

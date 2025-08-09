@@ -9,7 +9,7 @@ package transferobjects;
  * @author Tirth Rao
  * @since modify by Chen Wang
  */
-public class User {
+public class OperatorsDTO {
     private int userId;
     private String name;
     private String email;
@@ -18,7 +18,7 @@ public class User {
     private String breakLog;
 
     // Constructor is private to force the use of the Builder
-    private User(UserBuilder builder) {
+    private OperatorsDTO(UserBuilder builder) {
         this.userId = builder.userId;
         this.name = builder.name;
         this.email = builder.email;
@@ -89,8 +89,8 @@ public class User {
             return this;
         }
         
-        public User build() {
-            return new User(this);
+        public OperatorsDTO build() {
+            return new OperatorsDTO(this);
         }
     }
 }

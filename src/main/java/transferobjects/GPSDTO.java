@@ -6,7 +6,7 @@ package transferobjects;
 
 /**
  *
- * @author HelloFriend
+ * @author Chen Wang
  */
 public class GPSDTO {
     private int GPS_id;

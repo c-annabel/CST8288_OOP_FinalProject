@@ -11,7 +11,7 @@ package dataaccesslayer;
 import businesslayer.System_Control;
 import businesslayer.VehicleFactory;
 import dataaccesslayer.DAOinterface.RouteDAO;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 import dataaccesslayer.DAOinterface.VehicleDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,10 @@ import transferobjects.ElectricLightRail;
 import transferobjects.DieselElectricTrain;
 import transferobjects.GPSDTO;
 import transferobjects.RouteDTO;
-
+/**
+ * vehicleDAO implementation
+ * @author Chen Wang
+ */
 public class VehicleDAOImpl implements VehicleDAO {
     private CredentialsDTO cred;
     private DataSource source;
@@ -36,9 +39,14 @@ public class VehicleDAOImpl implements VehicleDAO {
         this.source = new DataSource(cred);
     }
     
+    /**
+     * 
+     * @param vehicle
+     * @throws SQLException 
+     */
     @Override
-    public void insertVehicle(Vehicle vehicle) throws SQLException {
-        String sql = "INSERT INTO Vehicles (vehicle_type, fuel_type, consumption_rate, max_passengers, ) VALUES (?, ?, ?, ?)";
+    public void insertVehicle(VehicleDTO vehicle) throws SQLException {
+        String sql = "INSERT INTO Vehicles (vehicle_type, fuel_type, consumption_rate, max_passengers) VALUES (?, ?, ?, ?)";
         try (Connection con = source.createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
@@ -52,16 +60,21 @@ public class VehicleDAOImpl implements VehicleDAO {
         }
     }
     
+    /**
+     * 
+     * @return List<VehicleDTO> all vehicle
+     * @throws SQLException 
+     */
     @Override
-    public List<Vehicle> getAllVehicles() throws SQLException {
-        List<Vehicle> vehicles = new ArrayList<>();
+    public List<VehicleDTO> getAllVehicles() throws SQLException {
+        List<VehicleDTO> vehicles = new ArrayList<>();
         String sql = "SELECT * FROM Vehicles";
         try (Connection con = source.createConnection();
              Statement stmt = con.createStatement(); 
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 String type = rs.getString("vehicle_type");
-                Vehicle vehicle = VehicleFactory.createVehicle(type);
+                VehicleDTO vehicle = VehicleFactory.createVehicle(type);
                 vehicle.setVehicleType(type);
                 vehicle.setVehicleID(rs.getInt("vehicle_id"));
                 vehicle.setVehicleNumber(rs.getString("vehicle_number"));
@@ -81,15 +94,21 @@ public class VehicleDAOImpl implements VehicleDAO {
         return vehicles;
     }
     
+    /**
+     * 
+     * @param vehicleNumber
+     * @return VehicleDTO target
+     * @throws SQLException 
+     */
     @Override
-    public Vehicle getVehicleByNumber(String vehicleNumber) throws SQLException {
+    public VehicleDTO getVehicleByNumber(String vehicleNumber) throws SQLException {
         String sql = "SELECT * FROM Vehicles WHERE vehicle_number = ?";
         try (Connection con = source.createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
              ps.setString(1, vehicleNumber);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Vehicle vehicle = VehicleFactory.createVehicle(rs.getString("vehicle_type"));
+                    VehicleDTO vehicle = VehicleFactory.createVehicle(rs.getString("vehicle_type"));
                     vehicle.setVehicleNumber(rs.getString("vehicle_number"));
                     vehicle.setFuelType(rs.getString("fuel_type"));
                     vehicle.setConsumptionRate(rs.getDouble("consumption_rate"));
@@ -110,8 +129,13 @@ public class VehicleDAOImpl implements VehicleDAO {
         return null;
     }
     
+    /**
+     * 
+     * @param vehicle
+     * @throws SQLException 
+     */
     @Override
-    public void updateVehicle(Vehicle vehicle) throws SQLException {
+    public void updateVehicle(VehicleDTO vehicle) throws SQLException {
         // Get the new route ID from the updated vehicle
         int newRouteId = vehicle.getRouteId();
         System_Control logic = new System_Control(cred);
@@ -170,6 +194,11 @@ public class VehicleDAOImpl implements VehicleDAO {
         } 
     }
     
+    /**
+     * 
+     * @param vehicleNumber
+     * @throws SQLException 
+     */
     @Override
     public void deleteVehicle(String vehicleNumber) throws SQLException {
         try (Connection con = source.createConnection()) {
@@ -185,13 +214,24 @@ public class VehicleDAOImpl implements VehicleDAO {
         }
     }
     
-    private String getVehicleType(Vehicle vehicle) {
+    /**
+     * function for getting vehicle type by vehicle class
+     * @param vehicle
+     * @return 
+     */
+    private String getVehicleType(VehicleDTO vehicle) {
         if (vehicle instanceof DieselBus) return "Diesel Bus";
         if (vehicle instanceof ElectricLightRail) return "Electric Light Rail";
         if (vehicle instanceof DieselElectricTrain) return "Diesel-Electric Train";
         return "Unknown";
     }
     
+    /**
+     * help function for cascade in database
+     * @param con
+     * @param sql
+     * @param vehicleNumber 
+     */
     private void deleteFromTable(Connection con, String sql, String vehicleNumber){
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, vehicleNumber);

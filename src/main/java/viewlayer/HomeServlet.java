@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import transferobjects.CredentialsDTO;
 
 /**
- *
+ * main page after successful login
  * @author Chen Wang
  */
 public class HomeServlet extends HttpServlet {
@@ -23,6 +23,13 @@ public class HomeServlet extends HttpServlet {
     private CredentialsDTO cred = new CredentialsDTO();
     private System_Control logic;
     
+    /**
+     * giving home page
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,6 +47,13 @@ public class HomeServlet extends HttpServlet {
         PageCreation.SystemHomePage(request, out, logic);
     }
     
+    /**
+     * taking all the data input action, and logout
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
                throws ServletException, IOException {

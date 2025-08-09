@@ -8,7 +8,7 @@ package transferobjects;
  *
  * @author Chen Wang
  */
-public class DieselBus extends Vehicle {
+public class DieselBus extends VehicleDTO {
     private int hoursOfUseBrake;
     private int hoursOfUseTires;
     private int hoursOfUseAxle;

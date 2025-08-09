@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 
 /**
  *
@@ -124,7 +124,7 @@ public class PageCreation {
         out.println("<a href='HomeServlet'>Back to System Home</a>");
         out.println("</body></html>");
     }
-    public static void ShowAllVehicle(List<Vehicle> vehicles, PrintWriter out) {
+    public static void ShowAllVehicle(List<VehicleDTO> vehicles, PrintWriter out) {
         out.println("<html><head><title>Vehicle Management</title>");
         out.println("<style>");
         out.println("table {border-collapse: collapse; width: 100%;}");
@@ -149,7 +149,7 @@ public class PageCreation {
         out.println("<th>Diagnostics</th>");
         out.println("</tr>");
 
-        for (Vehicle v : vehicles) {
+        for (VehicleDTO v : vehicles) {
             out.println("<tr>");
             out.println("<td>" + v.getVehicleId() + "</td>");
             out.println("<td>" + v.getVehicleNumber() + "</td>");
@@ -203,7 +203,7 @@ public class PageCreation {
         out.println("</body></html>");
     }
     
-    public static void EditVehicle(List<Vehicle> vehicles, HttpServletRequest request, PrintWriter out) {
+    public static void EditVehicle(List<VehicleDTO> vehicles, HttpServletRequest request, PrintWriter out) {
         out.println("<html><head><title>Edit/Delete Vehicle</title>");
         out.println("<style>");
         out.println("form {border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 5px;}");
@@ -213,7 +213,7 @@ public class PageCreation {
         out.println("</head><body>");
         out.println("<h2>Edit or Delete Vehicle</h2>");
 
-        for (Vehicle v : vehicles) {
+        for (VehicleDTO v : vehicles) {
             out.println("<form action='VehicleManagementServlet' method='post'>");
             out.println("<input type='hidden' name='vehicleId' value='" + v.getVehicleId() + "'>");
 

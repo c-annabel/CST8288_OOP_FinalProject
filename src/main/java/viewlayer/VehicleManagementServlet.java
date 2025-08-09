@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import transferobjects.CredentialsDTO;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 
 
 /**
@@ -40,10 +40,10 @@ public class VehicleManagementServlet extends HttpServlet {
         if(request.getParameter("AddVehiclePage") != null){
             PageCreation.AddVehicle(request, out);
         } else if(request.getParameter("ViewAll") != null){
-            List<Vehicle> vehicles = logic.getAllVehicles();
+            List<VehicleDTO> vehicles = logic.getAllVehicles();
             PageCreation.ShowAllVehicle(vehicles, out);
         } else if(request.getParameter("EditVehicle") != null){
-            List<Vehicle> vehicles = logic.getAllVehicles();
+            List<VehicleDTO> vehicles = logic.getAllVehicles();
             PageCreation.EditVehicle(vehicles, request, out);
         } else {
             PageCreation.VehicleManageHome(request, out);
@@ -64,7 +64,7 @@ public class VehicleManagementServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         // Declare newV outside the switch block
-        Vehicle newV = null;
+        VehicleDTO newV = null;
 
         switch(action){
             case "AddVehicle":

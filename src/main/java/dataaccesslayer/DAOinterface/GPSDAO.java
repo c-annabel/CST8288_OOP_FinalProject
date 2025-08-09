@@ -9,7 +9,7 @@ import java.util.List;
 import transferobjects.GPSDTO;
 /**
  *
- * @author HelloFriend
+ * @author Chen Wang
  */
 public interface GPSDAO {
         List<GPSDTO> getAllGPS()  throws SQLException;

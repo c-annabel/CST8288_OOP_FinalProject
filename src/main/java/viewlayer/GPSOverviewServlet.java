@@ -11,7 +11,7 @@ import dataaccesslayer.DataSource;
 import transferobjects.CredentialsDTO;
 import transferobjects.GPSDTO;
 import transferobjects.StationDTO;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,12 +27,23 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
+/**
+ * page or create page for GPS report or adapter
+ * @author Chen Wang
+ */
 public class GPSOverviewServlet extends HttpServlet {
     private static final String DATABASE_USERNAME = "cst8288";
     private static final String DATABASE_PASSWORD = "cst8288";
     private CredentialsDTO cred = new CredentialsDTO();
     private System_Control logic;
-
+    
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -46,7 +57,7 @@ public class GPSOverviewServlet extends HttpServlet {
         try {
             // Get all stations and vehicles
             List<StationDTO> stations = logic.getAllStations();
-            List<Vehicle> vehicles = logic.getAllVehicles();
+            List<VehicleDTO> vehicles = logic.getAllVehicles();
             
             // Get latest GPS tracking data for vehicles
             List<GPSDTO> locationData = getLocationData(stations, vehicles);
@@ -59,7 +70,14 @@ public class GPSOverviewServlet extends HttpServlet {
         }
     }
     
-    private List<GPSDTO> getLocationData(List<StationDTO> stations, List<Vehicle> vehicles) 
+    /**
+     * 
+     * @param stations
+     * @param vehicles
+     * @return
+     * @throws SQLException 
+     */
+    private List<GPSDTO> getLocationData(List<StationDTO> stations, List<VehicleDTO> vehicles) 
             throws SQLException {
         List<GPSDTO> locationData = new ArrayList<>();
         String sql = "SELECT gps_id, vehicle_number, timestamp, latitude, longitude FROM GPS_Tracking";

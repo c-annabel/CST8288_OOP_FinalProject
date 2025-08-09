@@ -10,7 +10,7 @@ import transferobjects.Maintence_ReportDTO;
 
 /**
  *
- * @author HelloFriend
+ * @author Chen Wang
  */
 public interface Maintence_ReportDAO {
         List<Maintence_ReportDTO> getAllReports()  throws SQLException;

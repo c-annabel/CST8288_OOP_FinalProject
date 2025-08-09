@@ -7,7 +7,7 @@ package viewlayer;
 
 import businesslayer.System_Control;
 import dataaccesslayer.FuelConsumptionDAO;
-import dataaccesslayer.UserDAOImpl;
+import dataaccesslayer.OperatorDAOImpl;
 import dataaccesslayer.VehicleDAOImpl;
 import transferobjects.*;
 import javax.servlet.*;
@@ -63,11 +63,11 @@ public class ReportServlet extends HttpServlet {
     }
 
     private void displayMaintenanceAlerts(HttpServletRequest request, PrintWriter out) throws SQLException {
-        List<Vehicle> vehicles = logic.getAllVehicles();
+        List<VehicleDTO> vehicles = logic.getAllVehicles();
         out.println("<table border='1' style='border-collapse: collapse;'>");
         out.println("<tr><th>Vehicle #</th><th>Type</th><th>Component</th><th>Hours Used</th><th>Threshold</th><th>Status</th></tr>");
         HttpSession session = request.getSession(false);
-        for (Vehicle vehicle : vehicles) {
+        for (VehicleDTO vehicle : vehicles) {
             String vehicleType = vehicle.getVehicleType();
             String component = "";
             int hoursUsed = 0;
@@ -123,11 +123,11 @@ public class ReportServlet extends HttpServlet {
     }
 
     private void displayOperatorPerformance(PrintWriter out) throws SQLException {
-        UserDAOImpl userDao = new UserDAOImpl(cred);
-        List<User> operators = new ArrayList<>();
+        OperatorDAOImpl userDao = new OperatorDAOImpl(cred);
+        List<OperatorsDTO> operators = new ArrayList<>();
         
         // Get only operators (assuming type 'Operator')
-        for (User user : userDao.getAllUsers()) {
+        for (OperatorsDTO user : userDao.getAllUsers()) {
             if ("Operator".equals(user.getUserType())) {
                 operators.add(user);
             }
@@ -136,7 +136,7 @@ public class ReportServlet extends HttpServlet {
         out.println("<table border='1' style='border-collapse: collapse;'>");
         out.println("<tr><th>Operator</th><th>On-time Rate</th><th>Efficiency</th><th>Break Logs</th></tr>");
         
-        for (User operator : operators) {
+        for (OperatorsDTO operator : operators) {
             // Simulated performance data
             double onTimeRate = 80 + (Math.random() * 20); // 80-100%
             double efficiency = 75 + (Math.random() * 25); // 75-100%

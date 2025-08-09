@@ -16,8 +16,8 @@ import transferobjects.CredentialsDTO;
 import transferobjects.Maintence_ReportDTO;
 
 /**
- *
- * @author HelloFriend
+ * Observer for vehicle usage and maintenance  status(need maintenance or not)
+ * @author Chen Wang
  */
 public class Maintence_ReportDAOImp implements Maintence_ReportDAO{
     private CredentialsDTO cred;

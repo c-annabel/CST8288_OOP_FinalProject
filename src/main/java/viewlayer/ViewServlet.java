@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import transferobjects.CredentialsDTO;
-import transferobjects.User;
+import transferobjects.OperatorsDTO;
 /**
  * LoginServlet (View Layer)
  * Handles the initial login page and authentication.
@@ -57,7 +57,7 @@ public class ViewServlet extends HttpServlet {
 //      doGet(request, response); // Redisplay login page with error message
         
         if(request.getParameter("login") != null){
-            User loginUser = logic.login(request.getParameter("Email"), request.getParameter("password"));
+            OperatorsDTO loginUser = logic.login(request.getParameter("Email"), request.getParameter("password"));
             if(loginUser != null){
                session.setAttribute("login", true);
                session.setAttribute("name", loginUser.getName());
@@ -69,7 +69,7 @@ public class ViewServlet extends HttpServlet {
                doGet(request, response);
             }
         }else if(request.getParameter("Register") != null){
-            User u = new User.UserBuilder()
+            OperatorsDTO u = new OperatorsDTO.UserBuilder()
                     .setEmail(request.getParameter("email"))
                     .setName(request.getParameter("name"))
                     .setPassword(request.getParameter("password"))

@@ -156,96 +156,81 @@ END;
 DELIMITER ;
 
 
--- sample data for test:
+-- Insert sample users
+INSERT INTO Users (name, email, password, user_type) VALUES
+('John Manager', 'john.manager@transit.com', SHA2('manager123', 256), 'Manager'),
+('Sarah Operator', 'sarah.operator@transit.com', SHA2('operator456', 256), 'Operator'),
+('Mike Supervisor', 'mike.supervisor@transit.com', SHA2('super789', 256), 'Manager'),
+('Emily Technician', 'emily.tech@transit.com', SHA2('techpass', 256), 'Operator');
+
+-- Insert sample logs
+INSERT INTO logs (description) VALUES
+('Break started - 15 minutes'),
+('Break ended'),
+('Vehicle maintenance scheduled'),
+('Fuel alert triggered'),
+('Route change notification'),
+('System login'),
+('GPS tracking initiated');
+
+-- Insert user logs
+INSERT INTO UsersLog (user_id, logs_ID) VALUES
+(1, 1), (1, 2), (2, 1), (2, 2), (3, 3), (4, 4), (1, 6), (2, 7);
+
 -- Insert sample routes
 INSERT INTO Routes (route_name) VALUES
 ('Downtown Express'),
-('University Line'),
-('Lakeshore Loop');
+('University Loop'),
+('River Cross'),
+('Westside Connector');
 
 -- Insert sample stations
 INSERT INTO Stations (station_name, latitude, longitude) VALUES
-('Central Station', '43.6532', '-79.3832'),
-('Market Square', '43.6506', '-79.3848'),
-('University Campus', '43.6629', '-79.3957'),
-('Research Park', '43.6731', '-79.3876'),
-('Lakefront Park', '43.6331', '-79.4186'),
-('Marina Bay', '43.6275', '-79.4223'),
-('City Hall', '43.6530', '-79.3830'),
-('Tech District', '43.6582', '-79.3801'),
-('Sports Complex', '43.6400', '-79.3900'),
-('Medical Center', '43.6700', '-79.4000');
+('Central Station', '43.651070', '-79.347015'),
+('University Terminal', '43.660780', '-79.395919'),
+('Riverfront Plaza', '43.642560', '-79.374987'),
+('Westside Hub', '43.678340', '-79.412345'),
+('Commerce Square', '43.655432', '-79.381234'),
+('Parkview Station', '43.663210', '-79.402345');
 
--- Assign stations to routes with stop orders
-
--- Downtown Express route
+-- Insert route-station mappings
 INSERT INTO RouteStations (route_id, station_id, stop_order) VALUES
-(1, 1, 1),   -- Central Station (first stop)
-(1, 2, 2),   -- Market Square
-(1, 7, 3),   -- City Hall
-(1, 8, 4);   -- Tech District
+(1, 1, 1), (1, 5, 2), (1, 3, 3),
+(2, 2, 1), (2, 6, 2), (2, 1, 3),
+(3, 3, 1), (3, 4, 2), (3, 6, 3),
+(4, 4, 1), (4, 5, 2), (4, 1, 3);
 
--- University Line route
-INSERT INTO RouteStations (route_id, station_id, stop_order) VALUES
-(2, 1, 1),   -- Central Station (first stop)
-(2, 3, 2),   -- University Campus
-(2, 4, 3),   -- Research Park
-(2, 10, 4);  -- Medical Center
+-- Insert sample vehicles (trigger will auto-generate vehicle numbers)
+INSERT INTO Vehicles (vehicle_type, fuel_type, consumption_rate, max_passengers, route_id, diagnostics, maintenance_threshold, hoursOfcomponents, fuel_alert_threshold) VALUES
+('Diesel Bus', 'Diesel', 25.5, 50, 1, 'No Need service', 500.00, 320, 40.0),
+('Electric Light Rail', 'Electricity', 18.2, 120, 2, 'Need service', 600.00, 620, 30.0),
+('Diesel-Electric Train', 'Diesel', 42.3, 200, 3, 'No Need service', 750.00, 450, 50.0),
+('Diesel Bus', 'Diesel', 26.1, 50, 4, 'No Need service', 500.00, 280, 40.0),
+('Electric Light Rail', 'Electricity', 17.8, 120, 1, 'No Need service', 600.00, 520, 30.0);
 
--- Lakeshore Loop route
-INSERT INTO RouteStations (route_id, station_id, stop_order) VALUES
-(3, 1, 1),   -- Central Station (first stop)
-(3, 5, 2),   -- Lakefront Park
-(3, 6, 3),   -- Marina Bay
-(3, 9, 4),   -- Sports Complex
-(3, 1, 5);   -- Back to Central Station (loop)
-
--- Insert sample vehicles assigned to routes
-INSERT INTO Vehicles (vehicle_type, fuel_type, consumption_rate, max_passengers, route_id) VALUES
-('Diesel Bus', 'Diesel', 8.5, 50, 1),
-('Electric Light Rail', 'Electricity', 15.2, 120, 2),
-('Diesel-Electric Train', 'Diesel', 25.7, 200, 3),
-('Diesel Bus', 'Diesel', 8.2, 50, 1),
-('Electric Light Rail', 'Electricity', 14.8, 120, 2);
-
--- Insert sample maintenance data for components
-UPDATE Vehicles SET 
-    hoursOfcomponents = 600
-WHERE vehicle_id = 1;  -- First diesel bus
-
-UPDATE Vehicles SET 
-    hoursOfcomponents = 950
-WHERE vehicle_id = 2;  -- First electric rail
-
-UPDATE Vehicles SET 
-    hoursOfcomponents = 500
-WHERE vehicle_id = 4;  -- Second diesel bus
-
--- Insert sample fuel consumption logs
+-- Insert fuel consumption logs
 INSERT INTO FuelConsumptionLogs (vehicle_id, consumption_date, fuel_consumed, distance_covered) VALUES
-(1, '2023-10-01', 42.5, 300),
-(1, '2023-10-02', 38.7, 280),
-(2, '2023-10-01', 120.5, 450),
-(2, '2023-10-02', 118.2, 440),
-(3, '2023-10-01', 185.3, 600),
-(4, '2023-10-01', 41.8, 290),
-(5, '2023-10-01', 115.7, 430);
+(1, '2023-08-01', 120.5, 280.2),
+(1, '2023-08-02', 115.3, 275.8),
+(2, '2023-08-01', 85.2, 320.5),
+(2, '2023-08-02', 82.7, 315.3),
+(3, '2023-08-01', 210.4, 450.8),
+(3, '2023-08-02', 205.7, 445.2),
+(4, '2023-08-01', 118.7, 285.4),
+(5, '2023-08-01', 80.3, 310.2);
 
--- Insert sample operators
-INSERT INTO Users (name, email, password, user_type) VALUES
-('John Transit', 'john@transit.com', SHA2('pass123', 256), 'Operator'),
-('Sarah Conductor', 'sarah@transit.com', SHA2('pass123', 256), 'Operator'),
-('Mike Controller', 'mike@transit.com', SHA2('pass123', 256), 'Manager');
+-- Insert maintenance reports
+INSERT INTO Maintenance_Report (vehicle_number, report_status, report_description) VALUES
+('DB-1', 'Completed', 'Routine oil change and filter replacement'),
+('ELR-1', 'Pending', 'Catenary system inspection needed'),
+('DET-1', 'In Progress', 'Brake system maintenance'),
+('DB-2', 'Completed', 'Tire rotation and pressure check'),
+('ELR-2', 'Scheduled', 'Monthly electrical system diagnostic');
 
--- Insert break logs
-INSERT INTO logs (description) VALUES 
-('BREAK: Lunch break - 30 mins'),
-('BREAK: Rest break - 15 mins'),
-('BREAK: Lunch break - 45 mins'),
-('BREAK: Equipment check - 20 mins');
-
-INSERT INTO UsersLog (user_id, logs_ID) VALUES
-(1, 1),  -- John: Lunch break
-(1, 2),  -- John: Rest break
-(2, 3),  -- Sarah: Lunch break
-(2, 4);  -- Sarah: Equipment check
+-- Insert GPS tracking data
+INSERT INTO GPS_Tracking (vehicle_number, timestamp, latitude, longitude) VALUES
+('DB-1', '2023-08-09 08:15:32', '43.650120', '-79.348765'),
+('ELR-1', '2023-08-09 08:20:15', '43.661230', '-79.396543'),
+('DET-1', '2023-08-09 08:25:47', '43.643210', '-79.376543'),
+('DB-2', '2023-08-09 08:30:22', '43.679120', '-79.413456'),
+('ELR-2', '2023-08-09 08:35:19', '43.654320', '-79.382109');

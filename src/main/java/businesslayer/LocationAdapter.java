@@ -6,10 +6,10 @@ package businesslayer;
 
 import transferobjects.GPSDTO;
 import transferobjects.StationDTO;
-import transferobjects.Vehicle;
+import transferobjects.VehicleDTO;
 
 /**
- * 
+ * interface for GPS Adapter for translate location to system
  * @author Chen Wang
  */
 public interface LocationAdapter {

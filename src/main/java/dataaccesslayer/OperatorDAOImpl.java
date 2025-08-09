@@ -5,27 +5,34 @@
 package dataaccesslayer;
 
 /**
- *
- * @author HelloFriend
+ * for the operator login and register,
+ * also able to get operator break log from the database
+ * @author Tirth Tao
+ * @since modify by Chen Wang
  */
-import dataaccesslayer.DAOinterface.UserDAO;
-import transferobjects.User;
+import transferobjects.OperatorsDTO;
 import java.sql.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import transferobjects.CredentialsDTO;
+import dataaccesslayer.DAOinterface.OperatorDAO;
 
-public class UserDAOImpl implements UserDAO {
+public class OperatorDAOImpl implements OperatorDAO {
     private CredentialsDTO cred;
     
-    public UserDAOImpl(CredentialsDTO cred){
+    public OperatorDAOImpl(CredentialsDTO cred){
         this.cred = cred;
     }
     
+    /**
+     * register operator
+     * @param u
+     * @return boolean true mean success, false mean some error occur
+     */
     @Override
-    public boolean registerUser(User u) {
+    public boolean registerUser(OperatorsDTO u) {
         String sql = "INSERT INTO Users (name, email, password, user_type) VALUES (?, ?, ?, ?)";
         DataSource source = new DataSource(cred);
         if(isEmailRegistered(u.getEmail())){
@@ -49,9 +56,16 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
-
+    
+    /**
+     * login action for the main page, taking user email and password for Authentication
+     * password is hashed before store in database
+     * @param email
+     * @param password
+     * @return 
+     */
     @Override
-    public User loginUser(String email, String password) {
+    public OperatorsDTO loginUser(String email, String password) {
         String sql = "SELECT * FROM Users WHERE email = ? AND password = ?";
         DataSource source = new DataSource(cred);
         
@@ -63,7 +77,7 @@ public class UserDAOImpl implements UserDAO {
 
             try(ResultSet rs = stmt.executeQuery()){
                 if (rs.next()) {
-                return new User.UserBuilder()
+                return new OperatorsDTO.UserBuilder()
                         .setUserId(rs.getInt("user_id"))
                         .setName(rs.getString("name"))
                         .setEmail(rs.getString("email"))
@@ -78,7 +92,13 @@ public class UserDAOImpl implements UserDAO {
 
         return null;
     }
-
+    
+    /**
+     * validator for register action
+     * send error message when email address already register
+     * @param email
+     * @return 
+     */
     @Override
     public boolean isEmailRegistered(String email) {
         String sql = "SELECT user_id FROM Users WHERE email = ?";
@@ -98,6 +118,12 @@ public class UserDAOImpl implements UserDAO {
         }
     }
     
+    /**
+     * for take a break action
+     * input the break minutes to database
+     * @param breakLog
+     * @param name 
+     */
     @Override
     public void takeABreak(String breakLog, String name) {
         final String insertLogSQL       = "INSERT INTO logs (description) VALUES (?)";
@@ -155,6 +181,11 @@ public class UserDAOImpl implements UserDAO {
         }
     }
     
+    /**
+     * getter for Break log
+     * @param name
+     * @return 
+     */
     @Override
     public List<String> getBreakLog(String name) {
         DataSource source = new DataSource(cred);
@@ -182,10 +213,13 @@ public class UserDAOImpl implements UserDAO {
         return logs;
     }
     
-    // Add to UserDAOImpl.java
+    /**
+     * 
+     * @return List<OperatorsDTO> all operators
+     */
     @Override
-    public List<User> getAllUsers(){
-        List<User> users = new ArrayList<>();
+    public List<OperatorsDTO> getAllUsers(){
+        List<OperatorsDTO> users = new ArrayList<>();
         String sql = "SELECT * FROM Users";
         DataSource source = new DataSource(cred);
 
@@ -194,7 +228,7 @@ public class UserDAOImpl implements UserDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                User user = new User.UserBuilder()
+                OperatorsDTO user = new OperatorsDTO.UserBuilder()
                     .setUserId(rs.getInt("user_id"))
                     .setName(rs.getString("name"))
                     .setEmail(rs.getString("email"))
@@ -208,7 +242,13 @@ public class UserDAOImpl implements UserDAO {
         }
         return users;
     }
-
+    
+    /**
+     * hash function for password
+     * @param password
+     * @return String hashed Password
+     * @throws NoSuchAlgorithmException 
+     */
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = md.digest(password.getBytes());
